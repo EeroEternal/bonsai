@@ -75,7 +75,9 @@ class ContextTreeManager:
         merged: list[tuple[int, int]] = []
         for start, end in ordered:
             if start < 0 or end < 0 or start >= end:
-                raise InvalidIgnoreSpanError(f"Invalid ignore span: {(start, end)}")
+                raise InvalidIgnoreSpanError(
+                    f"Invalid ignore span {start, end}: spans must be non-negative and non-empty"
+                )
             if end > token_count:
                 raise InvalidIgnoreSpanError(f"Ignore span exceeds token count: {(start, end)} > {token_count}")
             if not merged or start > merged[-1][1]:
