@@ -35,8 +35,17 @@ class SGLangAdapter(AsyncEngineAdapter):
         yield self._coerce_chunk(result)
 
     def _coerce_chunk(self, chunk) -> GenerationChunk:
+        if isinstance(chunk, dict):
+            text = chunk.get("text", "")
+            token_ids = list(chunk.get("token_ids", []))
+            finish_reason = chunk.get("finish_reason")
+        else:
+            text = getattr(chunk, "text", "")
+            token_ids = list(getattr(chunk, "token_ids", []) or [])
+            finish_reason = getattr(chunk, "finish_reason", None)
+
         return GenerationChunk(
-            text=getattr(chunk, "text", "") or chunk.get("text", ""),
-            token_ids=list(getattr(chunk, "token_ids", []) or chunk.get("token_ids", [])),
-            finish_reason=getattr(chunk, "finish_reason", None) or chunk.get("finish_reason"),
+            text=text,
+            token_ids=token_ids,
+            finish_reason=finish_reason,
         )
