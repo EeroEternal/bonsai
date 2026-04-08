@@ -31,4 +31,7 @@ def create_app(
     return app
 
 
-app = create_app()
+if os.getenv("BONSAI_TOKENIZER_MODEL") and os.getenv("BONSAI_MODEL_PATH"):
+    app = create_app()
+else:
+    app = FastAPI(title="Project Bonsai")
